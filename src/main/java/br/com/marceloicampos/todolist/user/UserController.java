@@ -24,6 +24,11 @@ public class UserController {
 
   @PostMapping("/")
   public UserModel create(@RequestBody UserModel UserModel) {
+    var user = this.userRepository.findByUsername(UserModel.getUsername());
+    if (user != null) {
+      System.out.println("User Already exists");
+      return null;
+    }
     var userCreated = this.userRepository.save(UserModel);
     return userCreated;
     // System.out.println(UserModel.getName());
