@@ -1,7 +1,20 @@
 package br.com.marceloicampos.todolist.user;
 
 public class UserModel {
-  public String name;
-  public String username;
-  public String password;
+  private String name;
+  private String username;
+  private String password;
+
+  public String getName() {
+    return name;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
 }
