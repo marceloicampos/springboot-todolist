@@ -1,6 +1,9 @@
 package br.com.marceloicampos.todolist.user;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,15 +28,18 @@ public class UserController {
   private UserRepository userRepository;
 
   @PostMapping("/")
-  public ResponseEntity<?> create(@RequestBody UserModel UserModel) {
-    var user = this.userRepository.findByUsername(UserModel.getUsername());
+  public ResponseEntity<?> create(@RequestBody UserModel userModel) {
+    var user = this.userRepository.findByUsername(userModel.getUsername());
     if (user != null) {
       System.out.println("User Already exists");
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User Already exists");
       // Retorna o status code e a mensagem de erro
       // Response Entity
     }
-    var userCreated = this.userRepository.save(UserModel);
+    var passwordHashed = BCrypt.withDefaults().hashToString(12, userModel.getPassword().toCharArray());
+    // https://github.com/patrickfav/bcrypt
+    userModel.setPassword(passwordHashed);
+    var userCreated = this.userRepository.save(userModel);
     return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
     // System.out.println(UserModel.getName());
     // System.out.println(UserModel.getUsername());
