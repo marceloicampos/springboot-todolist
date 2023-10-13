@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 /**
  ** Modificadores: public, private, protected
@@ -23,14 +25,16 @@ public class UserController {
   private UserRepository userRepository;
 
   @PostMapping("/")
-  public UserModel create(@RequestBody UserModel UserModel) {
+  public ResponseEntity<?> create(@RequestBody UserModel UserModel) {
     var user = this.userRepository.findByUsername(UserModel.getUsername());
     if (user != null) {
       System.out.println("User Already exists");
-      return null;
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User Already exists");
+      // Retorna o status code e a mensagem de erro
+      // Response Entity
     }
     var userCreated = this.userRepository.save(UserModel);
-    return userCreated;
+    return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
     // System.out.println(UserModel.getName());
     // System.out.println(UserModel.getUsername());
     // System.out.println(UserModel.getPassword());
