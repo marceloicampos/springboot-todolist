@@ -5,9 +5,13 @@ import org.springframework.web.bind.annotation.RestController;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -44,5 +48,11 @@ public class UserController {
     // System.out.println(UserModel.getName());
     // System.out.println(UserModel.getUsername());
     // System.out.println(UserModel.getPassword());
+  }
+
+  @GetMapping("/")
+  public List<UserModel> list() {
+    var users = this.userRepository.findAll();
+    return users;
   }
 }
