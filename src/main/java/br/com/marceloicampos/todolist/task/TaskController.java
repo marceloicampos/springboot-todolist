@@ -57,12 +57,22 @@ public class TaskController {
 
   // http://localhost:8080/tasks/9897986465897974-dadadasddds-5845458754 (example)
   @PutMapping("/{id}")
-  public TaskModel update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id) {
+  public ResponseEntity<?> update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id) {
     var task = this.taskRepository.findById(id).orElse(null);
+    if (task == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This task don't exist");
+    }
+
+    var idUser = request.getAttribute("idUser");
+    if (!task.getIdUser().equals(idUser)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User don't have permission to update this task");
+    }
+
     Utils.copyNonNullProperties(taskModel, task);
     // var idUser = request.getAttribute("idUser");
     // taskModel.setIdUser((UUID) idUser);
     // taskModel.setId(id);
-    return this.taskRepository.save(task);
+    var taskUpdate = this.taskRepository.save(task);
+    return ResponseEntity.ok().body((taskUpdate));
   }
 }
