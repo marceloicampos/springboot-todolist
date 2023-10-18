@@ -25,4 +25,19 @@ public class TaskModel {
   @CreationTimestamp
   private LocalDateTime createdAt;
   private UUID idUser;
+
+  public void setTitle(String title) throws Exception {
+    if (title.length() > 50) {
+      throw new Exception("ERROR: Title is too long, max 50 characters");
+    }
+    this.title = title;
+  }
+
+  public void getCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 }
